@@ -1,22 +1,35 @@
-class Employee extends React.Component{
+const React = require('react');
+const ReactDOM = require('react-dom');
+const client = require('./client');
+
+class App extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {employee: []};
+	}
+
+	componentDidMount() {
+		client({ path: '/GetAll/employees'}).done(response => {
+			this.setState({employee: response.entity._embedded.employees});
+		});
+	}
+
 	render() {
-		return (
-				<INPUT TYPE="Radio" Name="apiRequest" Value="getall">GETALL
-				<INPUT TYPE="Radio" Name="apiRequest" Value="get">GET
-				<INPUT TYPE="Radio" Name="apiRequest" Value="post">POST
-				<INPUT TYPE="Radio" Name="apiRequest" Value="put">PUT
-				<INPUT TYPE="Radio" Name="apiRequest" Value="delete">DELETE
-				<INPUT TYPE="Radio" Name="apiRequest" Value="deleteall">DELETEALL
-                <br /><br />
-			<tr>
-				<td>{this.props.employee.empId}</td><br />
-				<td>{this.props.employee.empName}</td><br />
-				<td>{this.props.employee.empSkill}</td><br />
-			</tr><br /><br />
-			
-
-			<button type="submit" form="form1" value="Submit">Submit</button>
-
+		const employees = this.props.employee.map(employee =>
+		<Employee key={employee._links.self.href} employee={employee}/>
+	);
+	return (
+		<table>
+			<tbody>
+				<tr>
+				<td>{this.props.employee.empID}</td>
+				<td>{this.props.employee.empName}</td>
+				<td>{this.props.employee.empSkills}</td>
+				</tr>
+				{employees}
+			</tbody>
+		</table>
 		)
 	}
 }
