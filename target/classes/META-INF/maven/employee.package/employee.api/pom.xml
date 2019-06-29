@@ -3,9 +3,8 @@
   <groupId>employee.package</groupId>
   <artifactId>employee.api</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>employee</name>
-  <description>employee apis
-employee API</description>
+  <name>Employee</name>
+  <description>employee API</description>
 
 <parent>
     <groupId>org.springframework.boot</groupId>
@@ -31,7 +30,7 @@ employee API</description>
         <artifactId>javax.el</artifactId>
         </dependency>
     </dependencies>
-    <plugin>
+    <!-- <plugin>
 	<groupId>com.github.eirslett</groupId>
 	<artifactId>frontend-maven-plugin</artifactId>
 	<version>1.6</version>
@@ -65,5 +64,5 @@ employee API</description>
 			</goals>
 		</execution>
 	</executions>
-</plugin>
+</plugin> -->
 </project>

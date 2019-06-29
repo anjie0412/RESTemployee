@@ -1,7 +1,5 @@
 package employee.api;
 
-
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-@Document(collection= "employeeNew1")
+@Document(collection= "Employee")
 public class employee {
 	
 	@Id @Field("ID") String empID;

@@ -23,7 +23,7 @@ public class employeeBoot implements CommandLineRunner {
 				System.out.println("Allemployees");
 				System.out.println("-------------------------------");
 				for (employee employee : repository.findAll()) {
-					System.out.println(employee);
+					System.out.println(employee.empName);
 				}
 				System.out.println();
 		
