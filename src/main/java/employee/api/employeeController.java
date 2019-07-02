@@ -42,7 +42,7 @@ public class employeeController {
 	public Object updateEmployee(@Valid @RequestBody employee emp) {
 
 		if (repository.findById(emp.empID).isPresent()) {
-			emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
+			//emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
 			return (repository.save(emp));
 		}
 		return ("record doesnt exists");
@@ -71,10 +71,6 @@ public class employeeController {
 			return ("records are present for all employees");
 	}
 	
-	@GetMapping("/search/employee/skill/{empSkill}")
-	public employee searchBySkill(@PathVariable String empSkill) {
-		return repository.findBySkill(empSkill);
-	}
 	
 	/*
 	 * @RequestMapping("/error") public String error() { return
