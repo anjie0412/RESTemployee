@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,27 +28,18 @@ public class employeeController {
 
 	@GetMapping("/get/employee/{empID}")
 	public Object getEmployeeByID(@Valid @PathVariable String empID) {
-		// System.out.println(empID);
-
-		//Optional<employee> empObject = repository.findById(empID);
-
-		//if (empObject.isPresent()) {
-			//return empObject;
-		//}
-		//return ("No employee has found with the id");
-		
 		return repository.findById(empID);
 	}
 
 
-	@PostMapping("/Add/employee")
-	public Object addEmployee(@Valid employee emp) {
-		emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
+	@PostMapping("/add/employee")
+	public Object addEmployee(@Valid @RequestBody employee emp) {
+		//emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
 		return (repository.save(emp));
 	}
 
 	@PutMapping("/update/employee")
-	public Object updateEmployee(@Valid employee emp) {
+	public Object updateEmployee(@Valid @RequestBody employee emp) {
 
 		if (repository.findById(emp.empID).isPresent()) {
 			emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
@@ -64,6 +57,8 @@ public class employeeController {
 		} else
 			return ("no record found of employee with employee ID" + "-" + empID);
 	}
+	
+	
 
 
 	@DeleteMapping("/deleteAll/employees")
@@ -75,4 +70,14 @@ public class employeeController {
 		else
 			return ("records are present for all employees");
 	}
+	
+	@GetMapping("/search/employee/skill/{empSkill}")
+	public employee searchBySkill(@PathVariable String empSkill) {
+		return repository.findBySkill(empSkill);
+	}
+	
+	/*
+	 * @RequestMapping("/error") public String error() { return
+	 * ("you must provide valid http request"); }
+	 */
 }
