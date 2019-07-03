@@ -16,43 +16,46 @@ import org.springframework.web.bind.annotation.RestController;
 public class employeeController {
 
 	@Autowired
-	private employeeRepository repository;
+	private employeeRepository empRepository;
+	
+	@Autowired
+	private SkillsRepository skillsRepository;
 
 	@GetMapping("/getAll/employees")
 	public Object getAllEmployees() {
-		if (repository.findAll().isEmpty()) {
+		if (empRepository.findAll().isEmpty()) {
 			return ("no employee data found");
 		}
-		return repository.findAll();
+		return empRepository.findAll();
 	}
 
 	@GetMapping("/get/employee/{empID}")
 	public Object getEmployeeByID(@Valid @PathVariable String empID) {
-		return repository.findById(empID);
+		return empRepository.findById(empID);
 	}
 
 
 	@PostMapping("/add/employee")
 	public Object addEmployee(@Valid @RequestBody employee emp) {
 		//emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
-		return (repository.save(emp));
+		return (empRepository.save(emp));
 	}
 
 	@PutMapping("/update/employee")
 	public Object updateEmployee(@Valid @RequestBody employee emp) {
 
-		if (repository.findById(emp.empID).isPresent()) {
+		if (empRepository.findById(emp.empID).isPresent()) {
 			//emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
-			return (repository.save(emp));
+			return (empRepository.save(emp));
 		}
 		return ("record doesnt exists");
 	}
 
 	@DeleteMapping("/delete/employee/{empID}")
 	public String deleteEmployee(@Valid @PathVariable String empID) {
-		repository.deleteById(empID);
+		empRepository.deleteById(empID);
 
-		if (repository.findById(empID).isPresent()) {
+		if (empRepository.findById(empID).isPresent()) {
 			return ("employee record exists");
 		} else
 			return ("no record found of employee with employee ID" + "-" + empID);
@@ -63,14 +66,18 @@ public class employeeController {
 
 	@DeleteMapping("/deleteAll/employees")
 	public String deleteAllEmployees() {
-		repository.deleteAll();
+		empRepository.deleteAll();
 
-		if (repository.findAll().isEmpty())
+		if (empRepository.findAll().isEmpty())
 			return ("records has been deleted successfully");
 		else
 			return ("records are present for all employees");
 	}
 	
+	//@GetMapping("/search/employee/skill/{empSkill}")
+	//public employee searchBySkill(@PathVariable String empSkill) {
+	//	return repository.findBySkill(empSkill);
+	//}
 	
 	/*
 	 * @RequestMapping("/error") public String error() { return
