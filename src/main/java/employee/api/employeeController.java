@@ -1,8 +1,10 @@
 package employee.api;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@Path("consume")
 public class employeeController {
 
+	@Autowired 
+	private MongoOperations mongoOps;
 	@Autowired
 	private employeeRepository empRepository;
 	@Autowired                                    
@@ -56,12 +59,16 @@ public class employeeController {
 	@DeleteMapping("/delete/employee/{empID}")
 	public Object deleteEmployee(@Valid @PathVariable String empID) {
 		if (empRepository.findById(empID).isPresent()) {
+			
 			empRepository.deleteById(empID);
-			SkillsRepository.deleteAllSkillsByEmployeeID(empID);    
+			
+			Query query = new Query();
+			query.addCriteria(Criteria.where("empID").is(empID));
+			mongoOps.findAllAndRemove(query, Skills.class);   
 			
 		return new ResponseEntity<String>("Employee Deleted succcessfully", HttpStatus.OK);}
 		else
-			return ("no record found with employeeID {empID} to be deleted ");
+			return ("no record found with employeeID "+ empID+" to be deleted ");
 	}
 	
 
