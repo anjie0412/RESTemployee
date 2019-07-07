@@ -15,9 +15,10 @@ public class employee {
 	@Field("managerName") @Indexed @NotBlank(message = "Employee's Manager's Name cannot be null") String managerName;
 	
 	
-	public employee( String empID, String empName) {
+	public employee( String empID, String empName, String managerName) {
 		this.empID = empID;
 		this.empName = empName;	
+		this.managerName = managerName;	
 	}
 		
 	public String getempID() {

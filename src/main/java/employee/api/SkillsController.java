@@ -19,22 +19,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class SkillsController {
 
 	@Autowired
-	private SkillsRepository skillsRepository;
+	private SkillsRepository SkillsRepository;
+	
+	@Autowired
+	private employeeRepository  EmployeesRepository;
+	
+	
 
 	@GetMapping("/get/skills/employeeID/{empID}")
 	public Object getSKillsByempID(@Valid @PathVariable String empID) {
-		return skillsRepository.findById(empID);
+		return SkillsRepository.findById(empID);
 	}
 
 	@PostMapping("/add/skill")
-	public Object addSkills(@Valid @RequestBody Skills skills) {
-		return (skillsRepository.save(skills));
+	public Object addSkills(@Valid Skills skills) {
+		if (EmployeesRepository.findById(skills.empID).isPresent())
+		return (SkillsRepository.save(skills));
+		else
+			return("no employee exists with employee id " + skills.empID + " to add skills");
 	}
 
 	@DeleteMapping("/delete/skill")
 	public String deleteSkill(@Valid @RequestBody Skills skills) {
-		skillsRepository.delete(skills);
-		if (skillsRepository.findById(skills.skillID).isPresent())
+		SkillsRepository.delete(skills);
+		if (SkillsRepository.findById(skills._id).isPresent())
 			return ("recordexists");
 		else
 			return ("no record found");

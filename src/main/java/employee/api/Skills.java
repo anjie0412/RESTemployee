@@ -2,23 +2,21 @@ package employee.api;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import javax.validation.constraints.NotBlank;
 
 @Document(collection= "Skills")
 public class Skills {
 	
-	@Id @Field("ID") String skillID;
-	@Field("empID") @NotBlank(message = "Employee ID cannot be null") String empID;
-	@Field("empSkills") @DBRef @Indexed @NotBlank(message = "Atleast one skill should be added for the employee") String empSkills ; 
+	@Id String _id;
+	@Field("empID") @Indexed @NotBlank(message = "Employee ID cannot be null") String empID;
+	@Field("empSkill") @NotBlank(message = "Atleast one skill should be added for the employee") String empSkill ; 
 	
 	
-	public Skills( String empID, String empSkills) {
+	public Skills(String empID, String empSkill) {
 		this.empID = empID;
-		this.empSkills = empSkills;		
+		this.empSkill = empSkill;		
 	}
 		
 	public String getempID() {
@@ -31,11 +29,12 @@ public class Skills {
 
 	
 	public String getSkills() {
-		return empSkills;	
+		return empSkill;	
 	}
 	
-	public void setSkill(String empSkills) {
-		this.empSkills = empSkills;
+	public void setSkill(String empSkill) {
+		this.empSkill = empSkill;
 	}
+
 
 }
