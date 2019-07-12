@@ -12,13 +12,13 @@ public class employee {
 	
 	@Id @Field("ID") String empID;
 	@Field("empName") @Indexed @NotBlank(message = "Employee Name cannot be null") String empName;
-	@Field("managerName") @Indexed @NotBlank(message = "Employee's Manager's Name cannot be null") String managerName;
+	@Field("managerID") @Indexed @NotBlank(message = "Employee's Manager's Name cannot be null") String managerID;
 	
 	
-	public employee( String empID, String empName, String managerName) {
+	public employee( String empID, String empName, String managerID) {
 		this.empID = empID;
 		this.empName = empName;	
-		this.managerName = managerName;	
+		this.managerID = managerID;	
 	}
 		
 	public String getempID() {
@@ -37,12 +37,12 @@ public class employee {
 		this.empName = empName;
 	}
 	
-	public String getManagerName() {
-		return managerName;	
+	public String getManagerID() {
+		return managerID;	
 	}
 	
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
+	public void setManagerID(String managerID) {
+		this.managerID = managerID;
 	}
 
 }

@@ -15,18 +15,8 @@ public class Skills {
 	
 	
 	public Skills(String empID, String empSkill) {
-		this.empID = empID;
 		this.empSkill = empSkill;		
 	}
-		
-	public String getempID() {
-		return empID;	
-	}
-	
-	public void setempID(String empID) {
-		this.empID = empID;
-	}
-
 	
 	public String getSkills() {
 		return empSkill;	

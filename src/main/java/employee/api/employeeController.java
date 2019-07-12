@@ -1,8 +1,13 @@
 package employee.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
@@ -22,8 +27,10 @@ public class employeeController {
 	@Autowired
 	private employeeRepository empRepository;
 	@Autowired                                    
-	private SkillsRepository SkillsRepository;     
-	
+	private SkillsRepository SkillsRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    
 
 
 	@GetMapping("/getAll/employees")
@@ -79,13 +86,23 @@ public class employeeController {
 			return new ResponseEntity<String>("All Employees Deleted succcessfully", HttpStatus.OK);
 	}
 	
-	//@GetMapping("/search/employee/skill/{empSkill}")
-	//public employee searchBySkill(@PathVariable String empSkill) {
-	//	return repository.findBySkill(empSkill);
-	//}
-	
-	/*
-	 * @RequestMapping("/error") public String error() { return
-	 * ("you must provide valid http request"); }
-	 */
+	@GetMapping("/search/employeesBy/manager/{managerName}")
+	 public List<employee> searchByManager(@PathVariable String managerName) {
+		
+		employee manager = empRepository.findManagerIDByName(managerName);
+		
+	    LookupOperation lookupOps = LookupOperation.newLookup()
+               .from("Employees")
+               .localField("empID")
+               .foreignField("managerID")
+               .as("employee");
+	    
+	    
+	    Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.where("managerID").is(manager.empID)) , lookupOps);
+	        
+	    List<employee> results = mongoTemplate.aggregate(aggregation, "Employees", employee.class).getMappedResults();
+       
+       return results;
+       
+	}
 }

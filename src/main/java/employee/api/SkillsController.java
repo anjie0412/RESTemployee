@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -26,19 +25,14 @@ import com.mongodb.client.result.DeleteResult;
 public class SkillsController {
 	
 	@Autowired 
-	private MongoOperations mongoOps;
-	
+	private MongoOperations mongoOps;	
     @Autowired
     private MongoTemplate mongoTemplate;
-
 	@Autowired
 	private SkillsRepository SkillsRepository;
-	
 	@Autowired
 	private employeeRepository  EmployeesRepository;
 
-	private AggregationOperation lookupOps;
-	
 	
 
 	@GetMapping("/get/skills/employeeID/{empID}")
@@ -79,10 +73,9 @@ public class SkillsController {
                 .localField("empID")
                 .foreignField("empID")
                 .as("employee");
-	    
-	    Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.where("empSkill").is(empSkill)) , lookupOps);
-	    
-	    
+                		
+        Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.where("empSkill").is(empSkill)) , lookupOps);
+	        
         List<EmpSkillResult> results = mongoTemplate.aggregate(aggregation, "Skills", EmpSkillResult.class).getMappedResults();
         
         return results;
