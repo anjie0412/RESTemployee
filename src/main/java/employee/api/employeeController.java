@@ -48,8 +48,7 @@ public class employeeController {
 
 
 	@PostMapping("/add/employee")
-	//@Consumes({"application/xml", "application/json", "application/x-www-form-urlencoded;charset=UTF-8"})
-	public Object addEmployee(@Valid employee emp) {
+	public Object addEmployee(@Valid  employee emp) {
 		//emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
 		return (empRepository.save(emp));
 	}
