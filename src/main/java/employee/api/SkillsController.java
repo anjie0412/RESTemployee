@@ -2,10 +2,12 @@ package employee.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -20,10 +22,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.rest.core.config.Projection;
 import org.springframework.data.rest.core.projection.ProjectionDefinitions;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
@@ -38,8 +43,6 @@ public class SkillsController {
 	@Autowired 
 	private MongoOperations mongoOps;	
     @Autowired
-    private MongoTemplate mongoTemplate;
-	@Autowired
 	private SkillsRepository SkillsRepository;
 	@Autowired
 	private employeeRepository  EmployeesRepository;
@@ -56,8 +59,8 @@ public class SkillsController {
 				}
 	
 
-	@PostMapping("/add/skill")
-	public Object addSkills(@Valid Skills skills) {
+	@PostMapping(value = "/add/skill")
+	public Object addSkills(@RequestBody @Valid Skills skills) {
 		if (EmployeesRepository.findById(skills.empID).isPresent()) {
 			if (SkillsRepository.objectExists(skills.empID, skills.empSkill) == null){
 				return (SkillsRepository.save(skills));
@@ -77,26 +80,21 @@ public class SkillsController {
 	}
 
 	@GetMapping("/search/bySkill/{empSkill}")
-	 public List<employee> searchBySkill(@PathVariable String empSkill) {
+	 public EmpSkillResult searchBySkill(@RequestBody @PathVariable String empSkill) {
 		
-		 List<employee> employees = new ArrayList<>();
-		   List<String> emps = new ArrayList<>();
-		   Integer iterator =0;
-				 List <Skills> skillObjects = SkillsRepository.searchBySkill(empSkill);
-
+		 List<String> empIDs = new ArrayList<String>();
+		 List <Skills> skillObjects = SkillsRepository.searchBySkill(empSkill);
+		 Iterator<Skills> itr = skillObjects.iterator();
+		 while (itr.hasNext()) {
+			 empIDs.add(itr.next().empID);
+		 }
+		 
+		 List<employee> emp = (List<employee>) EmployeesRepository.findAllById(empIDs);
 		
-		for (Skills skills : skillObjects) {
-			/*
-			 * Optional<employee> emp = EmployeesRepository.findById(skills.empID);
-			 * if(emp.isPresent()) { employees.add(emp);}
-			 */
-			emps.add(skills.empID);};
-			
-			(List<Object>) employee = EmployeesRepository.findAllById((Iterable<String>) emps.iterator());
-		
-	return (List<employee>) employees	;
-        
+		 return (new EmpSkillResult(empSkill , emp));
+	
 	}
+	
 
 
 
