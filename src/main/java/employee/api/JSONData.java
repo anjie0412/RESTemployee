@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotBlank;
 
-@Document(collection= "JSONData")
+@Document(collection= "Data")
 public class JSONData {
 	
 	@Id @Field("ID") String ID;

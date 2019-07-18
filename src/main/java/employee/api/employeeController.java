@@ -46,10 +46,13 @@ public class employeeController {
 		return empRepository.findById(empID);
 	}
 
+	@GetMapping("/get/employee/grade/{grade}")
+	public Object getSKillsByempID(@Valid @PathVariable String grade) {
+		return empRepository.findBygrade(grade);
+				}
 
 	@PostMapping("/add/employee")
 	public Object addEmployee(@Valid  employee emp) {
-		//emp.setSkill(emp.getSkills()[0].split(",")); //replace it with @RequestBody In case input is in JSON (Ideal way to do)T
 		return (empRepository.save(emp));
 	}
 
